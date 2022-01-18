@@ -3,6 +3,8 @@
 
 The following is a video surveilance system that uses Artifical Inteligence to track and record all instances of human activity.
 
+![Sample](https://user-images.githubusercontent.com/71618484/149887253-4ce2c641-f17d-4794-b283-2571f1c982b0.JPG)
+
 The complete system can be split into 3 parts:
 
 1. 3-Axis Camera Gimbal
@@ -22,3 +24,4 @@ The AI within the overall system is the heard of what makes the system inteligen
 
 
 All the information collected, ie. Instances of detected humans that have been tracked until out of view are encoded, and then saved to an SQL database from where they can be viewed later with the included utility. The database records all critical information such as the time and date of the occurunce, which will all be recorded upon dumping its contents.
+
