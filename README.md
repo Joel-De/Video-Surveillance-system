@@ -25,3 +25,5 @@ The AI within the overall system is the heard of what makes the system intellige
 ### SQL Database interface
 
 All the instances of detected humans that have been tracked until out of view are encoded, and then saved to an SQL database from where they can be viewed later with the included utility script. The database records all critical information such as the time and date of the occurrence, which will be displayed when exporting the data.
+
+
