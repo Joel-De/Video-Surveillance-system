@@ -7,7 +7,7 @@ The following is a video surveillance system that uses Artificial Intelligence t
 [![YoutubePreview](source/thumbnail.png)](https://youtu.be/1hW07kLk2sE)
 
 
-##The complete system can be split into 3 parts:
+## The complete system can be split into 3 parts:
 
 - 3-Axis Camera Gimbal 
 - Custom Computer vision AI models 
