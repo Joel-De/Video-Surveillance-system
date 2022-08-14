@@ -1,10 +1,10 @@
 import cv2
-from Predictor import DetectImg
-from multiprocessing import Process, Queue
+import serial
 import time
+from Predictor import DetectImg
 from Server import SQLDataBase
 from datetime import datetime
-import serial
+from multiprocessing import Process, Queue
 
 
 ###         Processes           ###
@@ -23,6 +23,7 @@ def MoveToDB(InstanceBuffer):
     DB.connection.close()
     print("[LOG] Data Transfer Complete")
 
+
 def ReadImage(queue, ImgSize):
     Camera = cv2.VideoCapture(0)
     Camera.set(3, ImgSize[0])
@@ -31,6 +32,7 @@ def ReadImage(queue, ImgSize):
         _, img = Camera.read()
         queue.put(img)
         time.sleep(0.05)
+
 
 ##############################################
 
@@ -48,6 +50,7 @@ def copyQueue(ImgQueue):
         listOfImages.append(ImgQueue.get())
     return listOfImages
 
+
 ##############################################
 
 
@@ -60,6 +63,7 @@ def SendCommand(command):
         Confirmation = arduino.readline()
         time.sleep(0.015)
 
+
 ##############################################
 
 
@@ -71,7 +75,7 @@ if __name__ == '__main__':
     ModelDir = "Models/model_27.pth"
     ArduinoComPort = 'COM4'
 
-    arduino = serial.Serial(port=ArduinoComPort,baudrate=19200,timeout=.1,writeTimeout=1)
+    arduino = serial.Serial(port=ArduinoComPort, baudrate=19200, timeout=.1, writeTimeout=1)
     time.sleep(3)
 
     predictor = DetectImg(ModelDir)
@@ -84,14 +88,15 @@ if __name__ == '__main__':
     InstanceBuffer = []
     Recording = False
 
-    SendCommand("VM50") # Raises Camera to level height
+    SendCommand("VM50")  # Raises Camera to level height
     print("[LOG] Started")
     while True:
 
         imgOriginal = ImgQueue.get()
         boxes = predictor.Predict(imgOriginal)
 
-        if ((time.time() - InstanceStart) > InstanceThreshold) and Recording:  # Check to see if detection instance has passed threshold and saves to database
+        if ((
+                    time.time() - InstanceStart) > InstanceThreshold) and Recording:  # Check to see if detection instance has passed threshold and saves to database
             print("[LOG] Starting Data Transfer Process")
             Recording = False
             MoveThread = Process(target=MoveToDB, args=[InstanceBuffer.copy()])
@@ -123,9 +128,6 @@ if __name__ == '__main__':
             avg[0] += (box[1][0] + box[0][0]) / 2
             avg[1] += (box[1][1] + box[0][1]) / 2
             cv2.rectangle(imgOriginal, box[0], box[1], (220, 0, 0), 3)
-
-        # cv2.imshow("PREVIEW", imgOriginal) # Optional Preview of detected instances
-        # cv2.waitKey(1)
 
         avg[0] = round(avg[0] / len(boxes))
         avg[1] = round(avg[1] / len(boxes))
